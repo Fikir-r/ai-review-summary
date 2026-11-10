@@ -1,9 +1,30 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import { getProduct, getProducts } from '@/lib/sample-data';
 import { Reviews } from '@/components/Reviews';
 
-export default async function ProductPage({
+export default function ProductPage({
+  params,
+}: {
+  params: Promise<{ productId: string }>;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <main className='min-h-screen p-8'>
+          <div className='max-w-4xl mx-auto'>
+            <p className='text-muted-foreground'>Loading product reviews...</p>
+          </div>
+        </main>
+      }
+    >
+      <ProductContent params={params} />
+    </Suspense>
+  );
+}
+
+async function ProductContent({
   params,
 }: {
   params: Promise<{ productId: string }>;
